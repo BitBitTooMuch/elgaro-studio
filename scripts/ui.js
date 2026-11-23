@@ -1,4 +1,4 @@
-/* Page UI: language buttons, menu, privacy sheet, sticky booking dock, scroller edge fades, copy address. */
+/* Page UI: language buttons, menu, privacy sheet, sticky booking dock, scroller edge fades. */
 (() => {
   'use strict';
 
@@ -109,35 +109,6 @@
     s.addEventListener('scroll', update, { passive: true });
     if ('ResizeObserver' in window) new ResizeObserver(update).observe(s);
     update();
-  });
-
-  /* ---------- copy address ---------- */
-  const copyBtn = $('copy-addr');
-  const addr = $('addr');
-  let copyTimer = 0;
-
-  copyBtn.addEventListener('click', () => {
-    const done = () => {
-      copyBtn.dataset.state = 'b';
-      $('copy-status').textContent = E.t('copied');
-      clearTimeout(copyTimer);
-      copyTimer = setTimeout(() => {
-        copyBtn.dataset.state = 'a';
-        $('copy-status').textContent = '';
-      }, 1600);
-    };
-    const selectText = () => {
-      const range = document.createRange();
-      range.selectNodeContents(addr);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(addr.textContent.trim()).then(done, selectText);
-    } else {
-      selectText();
-    }
   });
 
   /* ---------- start ---------- */

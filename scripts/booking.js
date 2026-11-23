@@ -1,27 +1,22 @@
-/* Booking demo: day, time and clipper-guard choices, validation, confirmation.
+/* Booking demo: service, day, time, contact details, confirmation.
    Times are generated examples and nothing is sent anywhere. */
 (() => {
   'use strict';
 
   const E = window.ELGARO;
-  const OPEN = 10 * 60;      // first slot 10:00
-  const CLOSE = 20 * 60;     // last slot ends 20:00
-  const STEP = 30;           // minutes per haircut
-  const LEAD = 30;           // minimum notice for same-day bookings
+  const OPEN = 10 * 60;   // first slot 10:00
+  const CLOSE = 20 * 60;  // last appointment must end by 20:00
+  const LEAD = 30;        // minimum notice for same-day bookings
   const DAY_COUNT = 14;
-  const GUARDS = [
-    { id: 'ask' },
-    { id: '0.5', n: 0.5, mm: 1.5 },
-    { id: '1', n: 1, mm: 3 },
-    { id: '2', n: 2, mm: 6 },
-    { id: '3', n: 3, mm: 9 },
-    { id: '4', n: 4, mm: 12 },
+  const SERVICES = [
+    { id: 'cut', key: 'svcCut', dur: 45, price: 15 },
+    { id: 'beard', key: 'svcBeard', dur: 30, price: null }, // price not known yet
   ];
 
   const $ = (id) => document.getElementById(id);
+  const servicesEl = $('services');
   const daysEl = $('days');
   const slotsEl = $('slots');
-  const guardsEl = $('guards');
   const form = $('booking-form');
   const done = $('done');
   const card = $('booking-card');
@@ -30,18 +25,23 @@
   const consentIn = $('f-consent');
   const submitBtn = $('submit');
   const submitSwap = $('submit-swap');
+  const submitLabel = $('submit-label');
   const summaryWhen = $('summary-when');
+  const summaryPrice = $('summary-price');
 
   const errs = { time: $('err-time'), name: $('err-name'), phone: $('err-phone'), consent: $('err-consent') };
   const inputs = { name: nameIn, phone: phoneIn, consent: consentIn };
 
-  const state = { day: null, time: null, guard: 'ask', token: 0, busy: false };
+  const state = { service: 'cut', day: null, time: null, token: 0, busy: false };
   const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const pad = (n) => String(n).padStart(2, '0');
   const dayKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const fmtTime = (min) => `${pad(Math.floor(min / 60))}:${pad(min % 60)}`;
   const cap = (s) => s.charAt(0).toLocaleUpperCase(E.locale()) + s.slice(1);
+  const svc = () => SERVICES.find((s) => s.id === state.service);
+  const fmtPrice = (n) => (E.lang === 'en' ? `€${n}` : `${n} €`);
+  const fmtDur = (n) => E.t('mins', { n });
 
   // Stable pseudo-random "taken" slots, so the demo looks the same on every open.
   const hash = (str) => {
@@ -59,15 +59,17 @@
   });
   const byKey = new Map(days.map((d) => [dayKey(d), d]));
 
+  // Start times step by the service length: haircut 10:00, 10:45, 11:30... beard 10:00, 10:30...
   function slotsFor(date) {
+    const { id, dur } = svc();
     const k = dayKey(date);
     const now = new Date();
     const isToday = k === dayKey(now);
     const nowMin = now.getHours() * 60 + now.getMinutes();
     const out = [];
-    for (let m = OPEN; m < CLOSE; m += STEP) {
+    for (let m = OPEN; m + dur <= CLOSE; m += dur) {
       if (isToday && m < nowMin + LEAD) continue;
-      out.push({ min: m, open: hash(`${k}@${m}`) % 100 >= 34 });
+      out.push({ min: m, open: hash(`${k}@${id}@${m}`) % 100 >= 34 });
     }
     return out;
   }
@@ -91,6 +93,27 @@
     return { wrap, input };
   }
 
+  /* ---------- service ---------- */
+  function renderServices() {
+    servicesEl.replaceChildren(...SERVICES.map((s) => {
+      const meta = s.price != null ? `${fmtDur(s.dur)} · ${fmtPrice(s.price)}` : fmtDur(s.dur);
+      const { wrap, input } = choice({
+        name: 'service',
+        value: s.id,
+        checked: state.service === s.id,
+        extra: 'svc',
+        label: `${E.t(s.key)}, ${meta}`,
+        html: `<span class="svc-title">${E.t(s.key)}</span><span class="svc-meta num">${meta}</span>`,
+      });
+      input.addEventListener('change', () => {
+        state.service = s.id;
+        renderDays();
+        selectDay(state.day, true);
+      });
+      return wrap;
+    }));
+  }
+
   /* ---------- days ---------- */
   // Intl gives a bare month number for Lithuanian short months, so LT uses the standard abbreviations.
   const LT_MONTHS = ['saus.', 'vas.', 'kov.', 'bal.', 'geg.', 'birž.', 'liep.', 'rugp.', 'rugs.', 'spal.', 'lapkr.', 'gruod.'];
@@ -99,7 +122,7 @@
     const loc = E.locale();
     const wd = new Intl.DateTimeFormat(loc, { weekday: 'short' });
     const enMonth = new Intl.DateTimeFormat(loc, { month: 'short' });
-    const mo = { format: (d) => (E.lang === 'lt' ? LT_MONTHS[d.getMonth()] : enMonth.format(d)) };
+    const month = (d) => (E.lang === 'lt' ? LT_MONTHS[d.getMonth()] : enMonth.format(d));
     const long = new Intl.DateTimeFormat(loc, { weekday: 'long', day: 'numeric', month: 'long' });
 
     daysEl.replaceChildren(...days.map((d, i) => {
@@ -113,7 +136,7 @@
         disabled: !free,
         extra: 'day',
         label: cap(long.format(d)) + (free ? '' : `, ${E.t('dayFull')}`),
-        html: `<span class="day-top">${top}</span><span class="day-num num">${d.getDate()}</span><span class="day-mon">${mo.format(d)}</span>`,
+        html: `<span class="day-top">${top}</span><span class="day-num num">${d.getDate()}</span><span class="day-mon">${month(d)}</span>`,
       });
       input.addEventListener('change', () => selectDay(k, true));
       return wrap;
@@ -175,33 +198,7 @@
     }));
   }
 
-  /* ---------- clipper guard ---------- */
-  function guardText(g) {
-    if (!g || g.id === 'ask') return E.t('sidesAsk');
-    const nf = new Intl.NumberFormat(E.locale());
-    return `${nf.format(g.mm)} mm (${E.t('guardNo', { n: nf.format(g.n) })})`;
-  }
-
-  function renderGuards() {
-    const nf = new Intl.NumberFormat(E.locale());
-    guardsEl.replaceChildren(...GUARDS.map((g) => {
-      const html = g.id === 'ask'
-        ? `<span class="guard-ask">${E.t('sidesAsk')}</span>`
-        : `<span class="guard-mm num">${nf.format(g.mm)}<small>mm</small></span><span class="guard-no num">${E.t('guardNo', { n: nf.format(g.n) })}</span>`;
-      const { wrap, input } = choice({
-        name: 'guard',
-        value: g.id,
-        checked: state.guard === g.id,
-        extra: g.id === 'ask' ? 'guard guard-wide' : 'guard',
-        label: guardText(g),
-        html,
-      });
-      input.addEventListener('change', () => { state.guard = g.id; });
-      return wrap;
-    }));
-  }
-
-  /* ---------- summary ---------- */
+  /* ---------- summary + button ---------- */
   function whenText() {
     const d = byKey.get(state.day);
     if (!d || state.time == null) return null;
@@ -210,9 +207,12 @@
   }
 
   function updateSummary() {
+    const s = svc();
     const w = whenText();
     summaryWhen.textContent = w || E.t('pickTime');
     summaryWhen.classList.toggle('is-empty', !w);
+    summaryPrice.textContent = s.price != null ? fmtPrice(s.price) : fmtDur(s.dur);
+    submitLabel.textContent = s.price != null ? E.t('submitPrice', { price: fmtPrice(s.price) }) : E.t('submitPlain');
   }
 
   /* ---------- errors ---------- */
@@ -259,8 +259,7 @@
     const bad = validate();
     if (bad.length) {
       if (bad[0] === 'time') {
-        const step = $('time-step');
-        step.scrollIntoView({ block: 'center', behavior: reduce() ? 'auto' : 'smooth' });
+        $('time-step').scrollIntoView({ block: 'center', behavior: reduce() ? 'auto' : 'smooth' });
         shake(slotsEl);
         const first = slotsEl.querySelector('input:not(:disabled)');
         if (first) first.focus({ preventScroll: true });
@@ -279,9 +278,12 @@
   });
 
   function fillDone() {
-    $('done-name').textContent = nameIn.value.trim();
+    const s = svc();
+    $('done-service').textContent = `${E.t(s.key)}, ${fmtDur(s.dur)}`;
     $('done-when').textContent = whenText() || '';
-    $('done-sides').textContent = guardText(GUARDS.find((g) => g.id === state.guard));
+    $('done-name').textContent = nameIn.value.trim();
+    $('done-price-row').hidden = s.price == null;
+    $('done-price').textContent = s.price != null ? fmtPrice(s.price) : '';
   }
 
   function showDone() {
@@ -308,9 +310,9 @@
 
   /* ---------- language ---------- */
   E.onLang(() => {
+    renderServices();
     renderDays();
     if (!slotsEl.hasAttribute('aria-busy')) renderSlots();
-    renderGuards();
     updateSummary();
     Object.keys(errs).forEach((k) => {
       const key = errs[k].dataset.key;
@@ -322,7 +324,7 @@
   /* ---------- start: first day that still has a free time ---------- */
   const firstFree = days.find((d) => slotsFor(d).some((s) => s.open));
   state.day = dayKey(firstFree || days[0]);
+  renderServices();
   renderDays();
   selectDay(state.day, false);
-  renderGuards();
 })();

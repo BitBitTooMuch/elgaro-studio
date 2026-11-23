@@ -25,7 +25,7 @@
 <body>
 <div class="page" id="top">
 
-  <p class="concept wrap"><span class="concept-dot" aria-hidden="true"></span><span data-i18n="concept">Svetainės koncepcija ELGARO Studio</span></p>
+  <p class="concept wrap"><span class="concept-dot" aria-hidden="true"></span><span data-i18n="concept">Svetainės koncepcija</span></p>
 
   <header class="masthead wrap">
     <a class="mark" href="#top" aria-label="ELGARO Studio">
@@ -52,7 +52,7 @@
             <span class="ht-word" data-i18n="heroWord">Kirpimas</span>
             <span class="ht-price" data-i18n="heroPrice">15 €</span>
           </h1>
-          <p class="hero-lead" data-i18n="heroLead">Barberio studija prekybos centre „Luizė“, Klaipėdoje.</p>
+          <p class="hero-lead" data-i18n="heroLead">Barberio studija PC „Luizė“, Klaipėdoje.</p>
         </div>
         <div class="pole" aria-hidden="true">
           <span class="pole-cap"></span>
@@ -65,10 +65,10 @@
           <span data-i18n="heroCta">Rezervuoti laiką</span>
           <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg>
         </a>
-        <a class="hero-where" href="#find">
+        <p class="hero-where">
           <svg class="i i-sm" aria-hidden="true"><use href="#i-pin"></use></svg>
           <span data-i18n="heroWhere">Šiaurės pr. 15, prie Regitros</span>
-        </a>
+        </p>
       </div>
     </section>
 
@@ -76,27 +76,25 @@
     <section class="section" id="booking" aria-labelledby="booking-title">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="h2" id="booking-title" data-i18n="bookTitle">Rezervuokite kirpimą</h2>
-          <p class="sub" data-i18n="bookSub">Pasirinkite dieną ir laiką. Sumokėsite studijoje.</p>
+          <h2 class="h2" id="booking-title" data-i18n="bookTitle">Rezervacija</h2>
         </div>
 
         <div class="card" id="booking-card">
           <form class="booking-form" id="booking-form" novalidate>
             <div class="step">
-              <p class="step-label" id="lbl-day"><span class="step-n">1</span><span data-i18n="stepDay">Diena</span></p>
+              <p class="step-label" id="lbl-service"><span class="step-n">1</span><span data-i18n="stepService">Paslauga</span></p>
+              <div class="services" id="services" role="radiogroup" aria-labelledby="lbl-service"></div>
+            </div>
+
+            <div class="step">
+              <p class="step-label" id="lbl-day"><span class="step-n">2</span><span data-i18n="stepDay">Diena</span></p>
               <div class="scroller" id="days" role="radiogroup" aria-labelledby="lbl-day"></div>
             </div>
 
             <div class="step" id="time-step">
-              <p class="step-label" id="lbl-time"><span class="step-n">2</span><span data-i18n="stepTime">Laikas</span></p>
+              <p class="step-label" id="lbl-time"><span class="step-n">3</span><span data-i18n="stepTime">Laikas</span></p>
               <div class="slots" id="slots" role="radiogroup" aria-labelledby="lbl-time"></div>
               <p class="err" id="err-time" role="alert" hidden></p>
-            </div>
-
-            <div class="step">
-              <p class="step-label" id="lbl-guard"><span class="step-n">3</span><span data-i18n="stepSides">Šonų ilgis</span></p>
-              <p class="step-hint" data-i18n="sidesHint">Nebūtina. Jei nežinote, barberis patars vietoje.</p>
-              <div class="scroller" id="guards" role="radiogroup" aria-labelledby="lbl-guard"></div>
             </div>
 
             <div class="step">
@@ -116,7 +114,7 @@
                   <label class="check" for="f-consent">
                     <input class="vh" id="f-consent" name="consent" type="checkbox" aria-describedby="err-consent">
                     <span class="check-box" aria-hidden="true"><svg class="i"><use href="#i-check"></use></svg></span>
-                    <span><span data-i18n="consent">Sutinku, kad vardas ir telefonas būtų naudojami tik šiai rezervacijai.</span> <button type="button" class="link" data-open="privacy" data-i18n="privacyLink">Kaip saugome duomenis</button></span>
+                    <span><span data-i18n="consent">Sutinku su</span> <button type="button" class="link" data-open="privacy" data-i18n="privacyLink">privatumo taisyklėmis</button></span>
                   </label>
                   <p class="err" id="err-consent" hidden></p>
                 </div>
@@ -124,14 +122,14 @@
             </div>
 
             <div class="summary" aria-live="polite">
-              <span class="summary-when is-empty" id="summary-when" data-i18n="pickTime">Laikas dar nepasirinktas</span>
-              <span class="summary-price" data-i18n="heroPrice">15 €</span>
+              <span class="summary-when is-empty" id="summary-when">Pasirinkite laiką</span>
+              <span class="summary-price num" id="summary-price">15 €</span>
             </div>
 
             <div class="submit-row">
               <button type="submit" class="btn btn-primary btn-block" id="submit">
                 <span class="swap" id="submit-swap" data-state="a">
-                  <span class="swap-a" data-i18n="submit">Rezervuoti už 15 €</span>
+                  <span class="swap-a" id="submit-label">Rezervuoti už 15 €</span>
                   <svg class="spinner swap-b" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle></svg>
                 </span>
               </button>
@@ -141,16 +139,15 @@
 
           <div class="done" id="done" tabindex="-1" hidden>
             <svg class="done-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"></circle><path d="M15 27l7.5 7.5L37.5 19"></path></svg>
-            <h3 class="done-title" data-i18n="doneTitle">Iki pasimatymo studijoje</h3>
+            <h3 class="done-title" data-i18n="doneTitle">Iki pasimatymo</h3>
             <dl class="done-list">
-              <div><dt data-i18n="doneName">Vardas</dt><dd id="done-name"></dd></div>
+              <div><dt data-i18n="doneService">Paslauga</dt><dd id="done-service"></dd></div>
               <div><dt data-i18n="doneWhen">Kada</dt><dd id="done-when"></dd></div>
-              <div><dt data-i18n="doneSides">Šonai</dt><dd id="done-sides"></dd></div>
-              <div><dt data-i18n="doneWhere">Kur</dt><dd data-i18n="doneWhereVal">PC „Luizė“, Šiaurės pr. 15</dd></div>
-              <div><dt data-i18n="donePrice">Kaina</dt><dd class="num" data-i18n="heroPrice">15 €</dd></div>
+              <div><dt data-i18n="doneName">Vardas</dt><dd id="done-name"></dd></div>
+              <div id="done-price-row"><dt data-i18n="donePrice">Kaina</dt><dd class="num" id="done-price"></dd></div>
             </dl>
-            <p class="done-note" data-i18n="doneNote">Tai demonstracinė versija, todėl rezervacija niekur neišsiųsta.</p>
-            <button type="button" class="btn btn-secondary btn-block" id="again" data-i18n="doneAgain">Rinktis kitą laiką</button>
+            <p class="done-note" data-i18n="doneNote">Demonstracinė versija. Rezervacija neišsiųsta.</p>
+            <button type="button" class="btn btn-secondary btn-block" id="again" data-i18n="doneAgain">Nauja rezervacija</button>
           </div>
         </div>
       </div>
@@ -160,98 +157,46 @@
     <section class="section" id="work" aria-labelledby="work-title">
       <div class="wrap section-head">
         <h2 class="h2" id="work-title" data-i18n="workTitle">Darbai</h2>
-        <p class="sub" data-i18n="workSub">Studijos kirpimų nuotraukos atsiras čia netrukus.</p>
       </div>
       <div class="scroller work" role="list">
-        <figure class="tile tile-fade" role="listitem" aria-label="Fade" data-i18n-attr="aria-label:tileFadeAria">
+        <figure class="tile tile-fade" role="listitem" aria-label="Fade">
           <span class="tile-word" aria-hidden="true">Fade</span>
-          <span class="tile-tag" aria-hidden="true" data-i18n="photoSoon">Foto netrukus</span>
         </figure>
-        <figure class="tile tile-taper" role="listitem" aria-label="Taper" data-i18n-attr="aria-label:tileTaperAria">
+        <figure class="tile tile-taper" role="listitem" aria-label="Taper">
           <span class="taper" aria-hidden="true"><span>T</span><span>A</span><span>P</span><span>E</span><span>R</span></span>
-          <span class="tile-tag" aria-hidden="true" data-i18n="photoSoon">Foto netrukus</span>
         </figure>
-        <figure class="tile tile-crop" role="listitem" aria-label="Crop" data-i18n-attr="aria-label:tileCropAria">
+        <figure class="tile tile-crop" role="listitem" aria-label="Crop">
           <span class="tile-word" aria-hidden="true">Crop</span>
           <span class="crop-block" aria-hidden="true"></span>
-          <span class="tile-tag" aria-hidden="true" data-i18n="photoSoon">Foto netrukus</span>
         </figure>
-        <figure class="tile tile-classic" role="listitem" aria-label="Klasika" data-i18n-attr="aria-label:tileClassicAria">
+        <figure class="tile tile-classic" role="listitem" aria-label="Klasika" data-i18n-attr="aria-label:tileClassic">
           <span class="part" aria-hidden="true"></span>
           <span class="tile-word" aria-hidden="true" data-i18n="tileClassic">Klasika</span>
-          <span class="tile-tag" aria-hidden="true" data-i18n="photoSoon">Foto netrukus</span>
         </figure>
       </div>
     </section>
 
-    <!-- Price and payment -->
+    <!-- Prices and payment -->
     <section class="section" id="price" aria-labelledby="price-title">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="h2" id="price-title" data-i18n="priceTitle">Kaina ir atsiskaitymas</h2>
+          <h2 class="h2" id="price-title" data-i18n="priceTitle">Kainos</h2>
         </div>
         <div class="card price-card">
-          <div class="price-row">
-            <span class="price-name" data-i18n="priceItem">Kirpimas</span>
-            <span class="price-val" data-i18n="heroPrice">15 €</span>
-          </div>
+          <ul class="svc-list">
+            <li class="svc-row">
+              <span class="svc-name"><span data-i18n="svcCut">Kirpimas</span><small class="num">45 min</small></span>
+              <span class="price-val" data-i18n="heroPrice">15 €</span>
+            </li>
+            <li class="svc-row">
+              <span class="svc-name"><span data-i18n="svcBeard">Barzda</span><small class="num">30 min</small></span>
+            </li>
+          </ul>
           <ul class="pay-list">
             <li><svg class="i" aria-hidden="true"><use href="#i-cash"></use></svg><span data-i18n="payCash">Grynaisiais</span></li>
             <li><svg class="i" aria-hidden="true"><use href="#i-phone"></use></svg><span>Apple Pay</span></li>
             <li><svg class="i" aria-hidden="true"><use href="#i-wallet"></use></svg><span>PayPal</span></li>
           </ul>
-          <p class="price-note" data-i18n="priceNote">Atsiskaitote studijoje.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Find the studio -->
-    <section class="section" id="find" aria-labelledby="find-title">
-      <div class="wrap">
-        <div class="section-head">
-          <h2 class="h2" id="find-title" data-i18n="findTitle">Rasite šalia Regitros</h2>
-          <p class="sub" data-i18n="findSub">Prekybos centras „Luizė“, Šiaurės pr. 15, Klaipėda.</p>
-        </div>
-        <div class="card map-card">
-          <figure class="map">
-            <svg viewBox="0 0 320 196" role="img" aria-labelledby="map-title">
-              <title id="map-title" data-i18n="mapTitle">Schema: ELGARO Studio prekybos centre „Luizė“, Šiaurės prospekte, netoli Regitros.</title>
-              <rect class="m-block" x="-10" y="8" width="24" height="96" rx="6"></rect>
-              <rect class="m-block" x="296" y="14" width="40" height="90" rx="6"></rect>
-              <rect class="m-block" x="-10" y="164" width="96" height="44" rx="6"></rect>
-              <rect class="m-block" x="98" y="164" width="120" height="44" rx="6"></rect>
-              <rect class="m-block" x="230" y="164" width="100" height="44" rx="6"></rect>
-              <rect class="m-road" x="-10" y="122" width="340" height="30"></rect>
-              <line class="m-dash" x1="-10" y1="137" x2="330" y2="137"></line>
-              <text class="m-road-label" x="160" y="140.5" text-anchor="middle">ŠIAURĖS PR.</text>
-              <rect class="m-luize" x="34" y="48" width="138" height="58" rx="8"></rect>
-              <text class="m-luize-label" x="103" y="82" text-anchor="middle">LUIZĖ</text>
-              <text class="m-num" x="103" y="117" text-anchor="middle">15</text>
-              <rect class="m-regitra" x="200" y="62" width="86" height="44" rx="6"></rect>
-              <text class="m-regitra-label" x="243" y="88" text-anchor="middle">Regitra</text>
-              <text class="m-num" x="243" y="117" text-anchor="middle">25</text>
-              <path class="m-pin" d="M70 46c0-9 7-15 15-15s15 6 15 15c0 10-15 22-15 22S70 56 70 46z"></path>
-              <circle class="m-pin-dot" cx="85" cy="45.5" r="5"></circle>
-              <text class="m-pin-label" x="106" y="38">ELGARO</text>
-            </svg>
-            <figcaption class="map-cap" data-i18n="mapCap">Schema</figcaption>
-          </figure>
-          <div class="addr-row">
-            <p class="addr" id="addr" data-i18n="addr">PC „Luizė“, Šiaurės pr. 15, 92312 Klaipėda</p>
-            <button type="button" class="icon-btn swap" id="copy-addr" data-state="a" aria-label="Kopijuoti adresą" data-i18n-attr="aria-label:copyAddr">
-              <svg class="i swap-a" aria-hidden="true"><use href="#i-copy"></use></svg>
-              <svg class="i swap-b" aria-hidden="true"><use href="#i-check"></use></svg>
-            </button>
-            <p class="vh" id="copy-status" aria-live="polite"></p>
-          </div>
-          <div class="map-actions">
-            <a class="btn btn-secondary" href="https://maps.apple.com/?q=PC+Luiz%C4%97&amp;address=%C5%A0iaur%C4%97s+pr.+15,+Klaip%C4%97da" target="_blank" rel="noopener">
-              <svg class="i i-sm" aria-hidden="true"><use href="#i-map"></use></svg>Apple Maps
-            </a>
-            <a class="btn btn-secondary" href="https://www.google.com/maps/search/?api=1&amp;query=PC+Luiz%C4%97%2C+%C5%A0iaur%C4%97s+pr.+15%2C+Klaip%C4%97da" target="_blank" rel="noopener">
-              <svg class="i i-sm" aria-hidden="true"><use href="#i-map"></use></svg>Google Maps
-            </a>
-          </div>
         </div>
       </div>
     </section>
@@ -260,16 +205,16 @@
   <footer class="footer">
     <div class="wrap footer-in">
       <p class="footer-mark">Elgaro<span>Studio</span></p>
-      <address class="footer-addr" data-i18n="addr">PC „Luizė“, Šiaurės pr. 15, 92312 Klaipėda</address>
+      <address class="footer-addr" data-i18n="addr">PC „Luizė“, Šiaurės pr. 15, Klaipėda</address>
       <p class="footer-pay" data-i18n="footPay">Grynieji, Apple Pay, PayPal</p>
       <div class="footer-links">
-        <button type="button" class="link" data-open="privacy" data-i18n="footPrivacy">Privatumas ir slapukai</button>
+        <button type="button" class="link" data-open="privacy" data-i18n="footPrivacy">Privatumas</button>
         <div class="seg" role="group" aria-label="Kalba" data-i18n-attr="aria-label:langLabel">
           <button type="button" class="seg-btn" data-lang="lt" aria-pressed="true">LT</button>
           <button type="button" class="seg-btn" data-lang="en" aria-pressed="false">EN</button>
         </div>
       </div>
-      <p class="fine" data-i18n="footFine">Svetainės koncepcija, 2026. Rezervacijos šioje versijoje niekur nesiunčiamos.</p>
+      <p class="fine" data-i18n="footFine">Svetainės koncepcija, 2026.</p>
     </div>
   </footer>
 </div>
@@ -292,15 +237,14 @@
     <nav class="menu-nav">
       <a href="#booking"><span data-i18n="navBook">Rezervacija</span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
       <a href="#work"><span data-i18n="navWork">Darbai</span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
-      <a href="#price"><span data-i18n="navPrice">Kaina</span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
-      <a href="#find"><span data-i18n="navFind">Kaip rasti</span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+      <a href="#price"><span data-i18n="navPrice">Kainos</span><svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
     </nav>
     <div class="menu-foot">
       <div class="seg" role="group" aria-label="Kalba" data-i18n-attr="aria-label:langLabel">
         <button type="button" class="seg-btn" data-lang="lt" aria-pressed="true">LT</button>
         <button type="button" class="seg-btn" data-lang="en" aria-pressed="false">EN</button>
       </div>
-      <p data-i18n="addr">PC „Luizė“, Šiaurės pr. 15, 92312 Klaipėda</p>
+      <p data-i18n="addr">PC „Luizė“, Šiaurės pr. 15, Klaipėda</p>
     </div>
   </div>
 </dialog>
@@ -310,7 +254,7 @@
   <div class="sheet-in">
     <div class="sheet-grip" aria-hidden="true"></div>
     <div class="sheet-head">
-      <h2 class="sheet-title" id="privacy-title" data-i18n="privTitle">Privatumas ir slapukai</h2>
+      <h2 class="sheet-title" id="privacy-title" data-i18n="privTitle">Privatumas</h2>
       <button type="button" class="icon-btn" data-close aria-label="Uždaryti" data-i18n-attr="aria-label:close">
         <svg class="i" aria-hidden="true"><use href="#i-close"></use></svg>
       </button>
@@ -319,8 +263,6 @@
       <p data-i18n="priv1"></p>
       <p data-i18n="priv2"></p>
       <p data-i18n="priv3"></p>
-      <p data-i18n="priv4"></p>
-      <p data-i18n="priv5"></p>
     </div>
   </div>
 </dialog>
@@ -331,12 +273,10 @@
   <symbol id="i-close" viewBox="0 0 24 24"><path vector-effect="non-scaling-stroke" d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path vector-effect="non-scaling-stroke" d="M4.5 12h15M13.5 6l6 6-6 6"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path vector-effect="non-scaling-stroke" d="M12 21s-6.5-5.8-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 15.2 12 21 12 21z"/><circle vector-effect="non-scaling-stroke" cx="12" cy="9.8" r="2.4"/></symbol>
-  <symbol id="i-copy" viewBox="0 0 24 24"><rect vector-effect="non-scaling-stroke" x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path vector-effect="non-scaling-stroke" d="M15.5 8.5V7a2.5 2.5 0 0 0-2.5-2.5H7A2.5 2.5 0 0 0 4.5 7v6A2.5 2.5 0 0 0 7 15.5h1.5"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path vector-effect="non-scaling-stroke" d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-cash" viewBox="0 0 24 24"><rect vector-effect="non-scaling-stroke" x="2.5" y="6.5" width="19" height="11" rx="2.5"/><circle vector-effect="non-scaling-stroke" cx="12" cy="12" r="2.6"/><path vector-effect="non-scaling-stroke" d="M6 10v4M18 10v4"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect vector-effect="non-scaling-stroke" x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path vector-effect="non-scaling-stroke" d="M10.5 18.5h3"/></symbol>
   <symbol id="i-wallet" viewBox="0 0 24 24"><path vector-effect="non-scaling-stroke" d="M17 7.5V6a1.5 1.5 0 0 0-1.5-1.5H6.5A2.5 2.5 0 0 0 4 7"/><rect vector-effect="non-scaling-stroke" x="4" y="7.5" width="16" height="12" rx="2.5"/><path vector-effect="non-scaling-stroke" d="M15.5 13.5h1.5"/></symbol>
-  <symbol id="i-map" viewBox="0 0 24 24"><path vector-effect="non-scaling-stroke" d="M9 4.5L4 6.5v13l5-2 6 2 5-2v-13l-5 2-6-2z"/><path vector-effect="non-scaling-stroke" d="M9 4.5v13M15 6.5v13"/></symbol>
 </svg>
 
 <script src="scripts/i18n.js" defer></script>
